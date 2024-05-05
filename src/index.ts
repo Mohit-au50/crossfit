@@ -1,7 +1,5 @@
 import express, { Request, Response, json } from "express";
-// const express = require("express");
 import { v1WorkoutRouter } from "./v1/routes/workoutRoutes";
-// const v1Router = require("./v1/routes");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -14,6 +12,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
+// middelware to parse the json request body similar to body-parser
 app.use(json());
 
 // use v1Router

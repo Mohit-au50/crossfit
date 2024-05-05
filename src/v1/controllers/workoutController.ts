@@ -1,22 +1,27 @@
 import { Request, Response } from "express";
-import * as services from "../services/workoutService";
+import {
+  serviceGetAllWorkouts,
+  serviceGetOneWorkout,
+  serviceCreateNewWorkout,
+  serviceUpdateOneWorkout,
+  serviceDeleteOneWorkout,
+} from "../services/workoutService";
 
-export function getAllWorkouts(req: Request, res: Response) {
-  // accept queries or multiple queries
+export const getAllWorkouts = (req: Request, res: Response) => {
   const { mode } = req.query;
 
   try {
-    const allWorkouts = services.getAllWorkouts({ mode });
-    res.json({ status: "Ok", data: allWorkouts });
+    const allWorkouts = serviceGetAllWorkouts({ mode });
+    res.json({ status: "OK", data: allWorkouts });
   } catch (error: any) {
     res.status(error?.status || 500).json({
       status: "FAILED",
       data: { error: error?.message || error },
     });
   }
-}
+};
 
-export function getOneWorkout(req: Request, res: Response) {
+export const getOneWorkout = (req: Request, res: Response) => {
   const { workoutId } = req.params;
 
   if (!workoutId) {
@@ -27,7 +32,7 @@ export function getOneWorkout(req: Request, res: Response) {
   }
 
   try {
-    const workout = services.getOneWorkout(workoutId);
+    const workout = serviceGetOneWorkout(workoutId);
     res.json({ status: "OK", data: workout });
   } catch (error: any) {
     res.status(error?.status || 500).json({
@@ -35,13 +40,13 @@ export function getOneWorkout(req: Request, res: Response) {
       data: { error: error?.message || error },
     });
   }
-}
+};
 
-export function createNewWorkout(req: Request, res: Response) {
+export const createNewWorkout = (req: Request, res: Response) => {
   const { name, mode, equipment, exercises, trainerTips } = req.body;
 
   if (!name || !mode || !equipment || !exercises || !trainerTips) {
-    res.status(400).send({
+    res.status(400).json({
       status: "FAILED",
       data: {
         error:
@@ -59,16 +64,16 @@ export function createNewWorkout(req: Request, res: Response) {
   };
 
   try {
-    const createdWorkout = services.createNewWorkout(newWorkout);
-    res.status(201).send({ status: "OK", data: createdWorkout });
+    const createdWorkout = serviceCreateNewWorkout(newWorkout);
+    res.status(201).json({ status: "OK", data: createdWorkout });
   } catch (error: any) {
     res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-}
+};
 
-export function updateOneWorkout(req: Request, res: Response) {
+export const updateOneWorkout = (req: Request, res: Response) => {
   const { workoutId } = req.params;
   const changes = req.body;
 
@@ -80,16 +85,16 @@ export function updateOneWorkout(req: Request, res: Response) {
   }
 
   try {
-    const updatedWorkout = services.updateOneWorkout(workoutId, changes);
+    const updatedWorkout = serviceUpdateOneWorkout(workoutId, changes);
     res.json({ status: "OK", data: updatedWorkout });
   } catch (error: any) {
     res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-}
+};
 
-export function deleteOneWorkout(req: Request, res: Response) {
+export const deleteOneWorkout = (req: Request, res: Response) => {
   const { workoutId } = req.params;
 
   if (!workoutId) {
@@ -100,11 +105,16 @@ export function deleteOneWorkout(req: Request, res: Response) {
   }
 
   try {
-    services.deleteOneWorkout(workoutId);
-    res.status(204).send({ status: "OK" });
+    serviceDeleteOneWorkout(workoutId);
+    res.status(204).json({
+      status: "OK",
+      data: {
+        message: `workout with is deleted from database`,
+      },
+    });
   } catch (error: any) {
     res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-}
+};

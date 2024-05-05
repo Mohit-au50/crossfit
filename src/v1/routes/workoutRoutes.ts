@@ -22,4 +22,4 @@ v1WorkoutRouter.post("/", createNewWorkout);
 
 v1WorkoutRouter.patch(":/workoutId", updateOneWorkout);
 
-v1WorkoutRouter.patch(":/workoutId", deleteOneWorkout);
+v1WorkoutRouter.delete(":/workoutId", deleteOneWorkout);

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import * as services from "../services/workoutService";
+import { serviceGetRecordsForWorkout } from "../services/workoutService";
 
-export function getRecordsForWorkout(req: Request, res: Response) {
+export const getRecordsForWorkout = (req: Request, res: Response) => {
   const { workoutId } = req.params;
 
   if (!workoutId) {
@@ -12,7 +12,7 @@ export function getRecordsForWorkout(req: Request, res: Response) {
   }
 
   try {
-    const allRecords = services.getRecordsForWorkout(workoutId);
+    const allRecords = serviceGetRecordsForWorkout(workoutId);
     res.json({ status: "Ok", data: allRecords });
   } catch (error: any) {
     res.status(error?.status || 500).json({
@@ -20,4 +20,4 @@ export function getRecordsForWorkout(req: Request, res: Response) {
       data: { error: error?.message || error },
     });
   }
-}
+};

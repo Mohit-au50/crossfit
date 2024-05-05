@@ -2,7 +2,7 @@ import DB from "./db.json";
 import { saveToDatabase } from "./utils";
 
 // function to return all the workouts
-export function getAllWorkouts(mode: any) {
+export const workoutGetAllWorkouts = (mode: any) => {
   try {
     let workouts = DB.workouts;
 
@@ -14,17 +14,17 @@ export function getAllWorkouts(mode: any) {
 
     return workouts;
   } catch (error: any) {
-    throw { status: 500, message: error };
+    return { status: 500, message: error };
   }
-}
+};
 
 // function to return one workout with the workoutId provided in the endpoint
-export function getOneWorkout(workoutId: string) {
+export const workoutGetOneWorkout = (workoutId: string) => {
   try {
     const workout = DB.workouts.find((workout) => workout.id === workoutId);
 
     if (!workout) {
-      throw {
+      return {
         status: 400,
         message: `Can't find workout with the id '${workoutId}'`,
       };
@@ -32,12 +32,12 @@ export function getOneWorkout(workoutId: string) {
 
     return workout;
   } catch (error: any) {
-    throw { status: error?.status || 500, message: error?.message || error };
+    return { status: error?.status || 500, message: error?.message || error };
   }
-}
+};
 
 // function to create a new workout and save it in the db
-export function createNewWorkout(newWorkout: any) {
+export const workoutCreateNewWorkout = (newWorkout: any) => {
   try {
     const isExsist =
       DB.workouts.findIndex(
@@ -45,7 +45,7 @@ export function createNewWorkout(newWorkout: any) {
       ) > -1;
 
     if (isExsist) {
-      throw {
+      return {
         status: 400,
         message: `Workout with the name '${newWorkout.name}' already exists`,
       };
@@ -55,19 +55,19 @@ export function createNewWorkout(newWorkout: any) {
     saveToDatabase(DB);
     return newWorkout;
   } catch (error: any) {
-    throw { status: error?.status || 500, message: error?.message || error };
+    return { status: error?.status || 500, message: error?.message || error };
   }
-}
+};
 
 // function to update a workout with the workoutId and the change to update and then save it in db
-export function updateOneWorkout(workoutId: string, changes: any) {
+export const workoutUpdateOneWorkout = (workoutId: string, changes: any) => {
   try {
     const workoutToUpdate = DB.workouts.findIndex(
       (workout) => workout.id === workoutId
     );
 
     if (workoutToUpdate === -1) {
-      throw {
+      return {
         status: 400,
         message: `Can't find workout with the id '${workoutId}'`,
       };
@@ -83,19 +83,20 @@ export function updateOneWorkout(workoutId: string, changes: any) {
     saveToDatabase(DB);
     return updatedWorkout;
   } catch (error: any) {
-    throw { status: error?.status || 500, message: error?.message || error };
+    return { status: error?.status || 500, message: error?.message || error };
   }
-}
+};
 
 // function to delete a workout from db
-export function deleteOneWorkout(workoutId: string) {
+export const workoutDeleteOneWorkout = (workoutId: string) => {
   try {
     const workoutToDelete = DB.workouts.findIndex(
       (workout) => workout.id === workoutId
     );
+    console.log(workoutToDelete);
 
     if (workoutToDelete === -1) {
-      throw {
+      return {
         status: 400,
         message: `Can't find workout with the id '${workoutId}'`,
       };
@@ -104,6 +105,6 @@ export function deleteOneWorkout(workoutId: string) {
     DB.workouts.splice(workoutToDelete, 1);
     saveToDatabase(DB);
   } catch (error: any) {
-    throw { status: error?.status || 500, message: error?.message || error };
+    return { status: error?.status || 500, message: error?.message || error };
   }
-}
+};
